@@ -3,7 +3,6 @@ package com.sladamos.data;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
