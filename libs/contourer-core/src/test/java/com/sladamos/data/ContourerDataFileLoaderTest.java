@@ -46,7 +46,7 @@ class ContourerDataFileLoaderTest {
 
     @Test
     void shouldParseDataProperlyFromExistingFile() {
-        String fileName = "data_test.asc";
+        String fileName = "data_karkonoski.asc";
         String path = Path.of("src/test/resources/" + fileName).toAbsolutePath().toString();
         FileInfo fileInfo = FileInfo.builder()
                 .absolutePath(path)
