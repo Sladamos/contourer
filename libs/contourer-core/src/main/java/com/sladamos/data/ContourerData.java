@@ -15,4 +15,6 @@ public class ContourerData {
     BigDecimal dx;
     BigDecimal dy;
     ContourerHeights heights;
+    BigDecimal minValue;
+    BigDecimal maxValue;
 }

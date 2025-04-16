@@ -36,6 +36,8 @@ public class ContourerDataFileLoader implements ContourerDataLoader {
             BigDecimal dx = parseBigDecimalLine(scanner);
             BigDecimal dy = parseBigDecimalLine(scanner);
             ContourerHeights heights = parseContourerHeights(scanner);
+            BigDecimal minValue = findMinValue(heights);
+            BigDecimal maxValue = findMaxValue(heights);
             return ContourerData.builder()
                     .numberOfColumns(numberOfColumns)
                     .numberOfRows(numberOfRows)
@@ -44,6 +46,8 @@ public class ContourerDataFileLoader implements ContourerDataLoader {
                     .dx(dx)
                     .dy(dy)
                     .heights(heights)
+                    .minValue(minValue)
+                    .maxValue(maxValue)
                     .build();
         } catch (FileNotFoundException e) {
             throw new ContourerLoaderException();
@@ -56,6 +60,20 @@ public class ContourerDataFileLoader implements ContourerDataLoader {
                 .map(this::parseContourerRow)
                 .toList();
         return new ContourerHeights(heights);
+    }
+
+    private BigDecimal findMinValue(ContourerHeights heights) {
+        return heights.rows().stream()
+                .flatMap(row -> row.heights().stream())
+                .min(BigDecimal::compareTo)
+                .orElseThrow();
+    }
+
+    private BigDecimal findMaxValue(ContourerHeights heights) {
+        return heights.rows().stream()
+                .flatMap(row -> row.heights().stream())
+                .max(BigDecimal::compareTo)
+                .orElseThrow();
     }
 
     private ContourerRow parseContourerRow(String line) {
