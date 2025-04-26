@@ -6,7 +6,6 @@ import com.sladamos.rank.RankCalculatorData;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.function.Function;
 
@@ -35,7 +34,7 @@ public class MarchingMapFactory {
 
     private Function<BigDecimal, RankCalculatorData> createCalculatorDataFunction(ContourerData data, int numberOfRanks) {
         BigDecimal minValue = data.getMinValue();
-        BigDecimal step = data.getMaxValue().subtract(minValue).divide(BigDecimal.valueOf(numberOfRanks), RoundingMode.HALF_UP);
-        return height -> new RankCalculatorData(height, minValue, step, numberOfRanks - 1);
+        BigDecimal maxValue = data.getMaxValue();
+        return height -> new RankCalculatorData(height, maxValue, minValue, numberOfRanks);
     }
 }
