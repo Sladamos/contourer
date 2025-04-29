@@ -16,7 +16,7 @@ class MarchingLinesDetectorTest {
     private final MarchingLinesDetector uut = new MarchingLinesDetector();
 
     @ParameterizedTest(name = "Lines: {1}")
-    @MethodSource("detectLinesOnSingleSquareArgs")
+    @MethodSource("detectLinesOnTwoRanksSingleSquareArgs")
     void shouldDetectLinesOnSingleSquare(List<MarchingRow> marchingRows, Set<MarchingLine> expectedLines) {
 
         Set<MarchingLine> lines = uut.detectLines(marchingRows);
@@ -26,7 +26,7 @@ class MarchingLinesDetectorTest {
                 .isEqualTo(expectedLines);
     }
 
-    public static Stream<Arguments> detectLinesOnSingleSquareArgs() {
+    public static Stream<Arguments> detectLinesOnTwoRanksSingleSquareArgs() {
         MarchingLine rightLine = new MarchingLine(new Point(1.5, 1), new Point(2, 1));
         MarchingLine leftLine = new MarchingLine(new Point(0, 1), new Point(0.5, 1));
         MarchingLine bottomLine = new MarchingLine(new Point(1, 1.5), new Point(1, 2));
@@ -149,6 +149,30 @@ class MarchingLinesDetectorTest {
                                 new MarchingLine(new Point(0.5, 1), new Point(1.5, 1)),
                                 rightLine,
                                 leftLine
+                        )),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(1.5, 1), new Point(1, 0.5)),
+                                new MarchingLine(new Point(0.5, 1), new Point(1, 1.5)),
+                                rightLine,
+                                leftLine,
+                                topLine,
+                                bottomLine
+                        )),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(0.5, 1), new Point(1, 0.5)),
+                                new MarchingLine(new Point(1, 1.5), new Point(1.5, 1)),
+                                rightLine,
+                                topLine,
+                                bottomLine,
+                                leftLine
                         ))
         );
     }
@@ -158,18 +182,27 @@ class MarchingLinesDetectorTest {
     }
     /*
 
-    void shouldAssignIndexesProperly() {
-
-
-    void shouldDetectLinesOnSquaresWithMultipleRows() { TODO: dodać dla tego 1 square że uzupełnia przy krawędziach
+    void shouldSetOffsetProperly() {
     0 1 0
     0 0 0
 
+
+    void shouldDetectLinesOnSquaresWithMultipleRows() {
+    0 1 0
+    0 0 0
+    0 1 0
+
     1 1 0
     0 0 0
+    1 1 0
 
     1 1 1
     0 0 0
+    1 1 1
+
+    1 0 1
+    0 1 0
+    1 0 1
 
     }*/
 

@@ -18,7 +18,9 @@ public class MarchingLinesDetector {
                 MarchingSquare rightUpper = marchingRows.get(i).getSquare(j + 1);
                 MarchingSquare leftLower = marchingRows.get(i + 1).getSquare(j);
                 MarchingSquare rightLower = marchingRows.get(i + 1).getSquare(j + 1);
-                if (isLeftUpperRankDifferent(leftUpper, rightUpper, leftLower, rightLower)) {
+                if (areAllRanksEqual(leftUpper, rightUpper, leftLower, rightLower)) {
+                    continue;
+                } else if (isLeftUpperRankDifferent(leftUpper, rightUpper, leftLower, rightLower)) {
                     addTopLineIfNecessary(i, marchingLines, j);
                     addLeftLineIfNecessary(j, marchingLines, i);
                     marchingLines.add(new MarchingLine(new Point(j + 0.5, i + 1), new Point(j + 1, i + 0.5)));
@@ -42,10 +44,32 @@ public class MarchingLinesDetector {
                     addTopLineIfNecessary(i, marchingLines, j);
                     addBottomLineIfNecessary(i, marchingLines, j, rows);
                     marchingLines.add(new MarchingLine(new Point(j + 1, i + 0.5), new Point(j + 1, i + 1.5)));
+                } else if (areSameRanksDiagonally(leftUpper, rightLower, 1)) {
+                    addTopLineIfNecessary(i, marchingLines, j);
+                    addBottomLineIfNecessary(i, marchingLines, j, rows);
+                    addLeftLineIfNecessary(j, marchingLines, i);
+                    addRightLineIfNecessary(j, marchingLines, i, cols);
+                    marchingLines.add(new MarchingLine(new Point(j + 0.5, i + 1), new Point(j + 1, i + 0.5)));
+                    marchingLines.add(new MarchingLine(new Point(j + 1.5, i + 1), new Point(j + 1, i + 1.5)));
+                } else if (areSameRanksDiagonally(leftUpper, rightLower, 0)) {
+                    addTopLineIfNecessary(i, marchingLines, j);
+                    addBottomLineIfNecessary(i, marchingLines, j, rows);
+                    addLeftLineIfNecessary(j, marchingLines, i);
+                    addRightLineIfNecessary(j, marchingLines, i, cols);
+                    marchingLines.add(new MarchingLine(new Point(j + 1.5, i + 1), new Point(j + 1, i + 0.5)));
+                    marchingLines.add(new MarchingLine(new Point(j + 0.5, i + 1), new Point(j + 1, i + 1.5)));
                 }
             }
         }
         return marchingLines;
+    }
+
+    private boolean areAllRanksEqual(MarchingSquare a, MarchingSquare b, MarchingSquare c, MarchingSquare d) {
+        return a.getRank() == b.getRank() && b.getRank() == c.getRank() && c.getRank() == d.getRank();
+    }
+
+    private static boolean areSameRanksDiagonally(MarchingSquare leftUpper, MarchingSquare rightLower, int rank) {
+        return leftUpper.getRank() == rightLower.getRank() && leftUpper.getRank() == rank;
     }
 
     private static void addBottomLineIfNecessary(int i, Set<MarchingLine> marchingLines, int j, int rows) {
