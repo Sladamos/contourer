@@ -28,10 +28,22 @@ public class MarchingLinesDetector {
                     marchingLines.add(new MarchingLine(new Point(j + 0.5, i + 1), new Point(j + 1, i + 1.5)));
                 } else if (isDRankDifferent(a, b, c, d)) {
                     marchingLines.add(new MarchingLine(new Point(j + 1.5, i + 1), new Point(j + 1, i + 1.5)));
+                } else if (isHorizontalLine(a, b, c, d)) {
+                    marchingLines.add(new MarchingLine(new Point(j + j == 0 ? 0 : 0.5, i + 1), new Point(j == cols - 2 ? 2 : 1.5, i + 1)));
+                } else if (isVerticalLine(a, b, c, d)) {
+                    marchingLines.add(new MarchingLine(new Point(j + 1, i + i == 0 ? 0 : 0.5), new Point(j + 1, i + i == rows - 2 ? 2 : 1.5)));
                 }
             }
         }
         return marchingLines;
+    }
+
+    private boolean isVerticalLine(MarchingSquare a, MarchingSquare b, MarchingSquare c, MarchingSquare d) {
+        return a.getRank() == c.getRank() && b.getRank() != c.getRank() && b.getRank() == d.getRank();
+    }
+
+    private boolean isHorizontalLine(MarchingSquare a, MarchingSquare b, MarchingSquare c, MarchingSquare d) {
+        return a.getRank() == b.getRank() && b.getRank() != c.getRank() && c.getRank() == d.getRank();
     }
 
     private boolean areAllRanksEqual(MarchingSquare a, MarchingSquare b, MarchingSquare c, MarchingSquare d) {

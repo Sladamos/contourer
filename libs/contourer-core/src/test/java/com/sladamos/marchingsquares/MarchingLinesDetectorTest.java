@@ -78,7 +78,27 @@ class MarchingLinesDetectorTest {
                                 new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1))),
                                 new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0)))
                         ),
-                        Set.of(new MarchingLine(new Point(1.5, 1), new Point(1, 1.5))))
+                        Set.of(new MarchingLine(new Point(1.5, 1), new Point(1, 1.5)))),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0)))
+                        ),
+                        Set.of(new MarchingLine(new Point(0, 1), new Point(2, 1)))),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0)))
+                        ),
+                        Set.of(new MarchingLine(new Point(1, 0), new Point(1, 2)))),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1)))
+                        ),
+                        Set.of(new MarchingLine(new Point(1, 0), new Point(1, 2)))),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1)))
+                        ),
+                        Set.of(new MarchingLine(new Point(0, 1), new Point(2, 1))))
         );
     }
 
@@ -90,7 +110,15 @@ class MarchingLinesDetectorTest {
     void shouldAssignIndexesProperly() {
 
 
-    void shouldDetectLinesOnSquaresWithMultipleRows() {
+    void shouldDetectLinesOnSquaresWithMultipleRows() { TODO: dodać dla tego 1 square że uzupełnia przy krawędziach
+    0 1 0
+    0 0 0
+
+    1 1 0
+    0 0 0
+
+    1 1 1
+    0 0 0
 
     }*/
 
