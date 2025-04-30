@@ -1,5 +1,5 @@
 package com.sladamos.data;
 
-public interface ContourerDataLoader {
-    ContourerData loadData();
+public interface ContourerDataLoader<T> {
+    ContourerData loadData(T dataInfo);
 }

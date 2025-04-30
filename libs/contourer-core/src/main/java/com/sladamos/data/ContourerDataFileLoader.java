@@ -2,7 +2,6 @@ package com.sladamos.data;
 
 import com.sladamos.file.FileExtension;
 import com.sladamos.file.FileInfo;
-import com.sladamos.file.FileProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
@@ -13,13 +12,10 @@ import java.util.List;
 import java.util.Scanner;
 
 @RequiredArgsConstructor
-public class ContourerDataFileLoader implements ContourerDataLoader {
-
-    private final FileProvider fileProvider;
+public class ContourerDataFileLoader implements ContourerDataLoader<FileInfo> {
 
     @Override
-    public ContourerData loadData() {
-        FileInfo fileInfo = fileProvider.getFileInfo();
+    public ContourerData loadData(FileInfo fileInfo) {
         if (!fileInfo.getFileExtension().equals(FileExtension.ASC)) {
             throw new ContourerLoaderException();
         }

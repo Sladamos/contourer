@@ -2,35 +2,23 @@ package com.sladamos.data;
 
 import com.sladamos.file.FileExtension;
 import com.sladamos.file.FileInfo;
-import com.sladamos.file.FileProvider;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class ContourerDataFileLoaderTest {
 
-    @Mock
-    private FileProvider fileProvider;
-
-    @InjectMocks
-    private ContourerDataFileLoader uut;
+    private final ContourerDataFileLoader uut = new ContourerDataFileLoader();
 
     @Test
     void shouldThrowContourerLoaderExceptionWhenFileExtensionIsNotTiff() {
         FileInfo fileInfo = FileInfo.builder().fileExtension(FileExtension.EMPTY).build();
-        when(fileProvider.getFileInfo()).thenReturn(fileInfo);
 
-        assertThatThrownBy(uut::loadData).isInstanceOf(ContourerLoaderException.class);
+        assertThatThrownBy(() -> uut.loadData(fileInfo)).isInstanceOf(ContourerLoaderException.class);
     }
 
     @Test
@@ -40,9 +28,8 @@ class ContourerDataFileLoaderTest {
                 .fileName("testName")
                 .absolutePath("testPath")
                 .build();
-        when(fileProvider.getFileInfo()).thenReturn(fileInfo);
 
-        assertThatThrownBy(uut::loadData).isInstanceOf(ContourerLoaderException.class);
+        assertThatThrownBy(() -> uut.loadData(fileInfo)).isInstanceOf(ContourerLoaderException.class);
     }
 
     @Test
@@ -53,9 +40,8 @@ class ContourerDataFileLoaderTest {
                 .absolutePath(path)
                 .fileName(fileName)
                 .fileExtension(FileExtension.ASC).build();
-        when(fileProvider.getFileInfo()).thenReturn(fileInfo);
 
-        ContourerData contourerData = uut.loadData();
+        ContourerData contourerData = uut.loadData(fileInfo);
 
         assertAll("Should correctly parse data",
                 () -> assertThat(contourerData.getNumberOfColumns()).isEqualTo(2209),
