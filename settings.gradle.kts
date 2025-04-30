@@ -1,5 +1,5 @@
-file("libs").listFiles()?.forEach { module ->
+file(".").listFiles()?.forEach { module ->
     if (module.isDirectory && file("${module.absolutePath}/build.gradle.kts").exists()) {
-        include(":libs:${module.name}")
+        include(":${module.name}")
     }
 }
