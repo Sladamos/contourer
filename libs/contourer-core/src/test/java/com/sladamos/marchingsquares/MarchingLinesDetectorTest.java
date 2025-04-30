@@ -1,6 +1,7 @@
 package com.sladamos.marchingsquares;
 
 import com.sladamos.util.Point;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,16 +18,60 @@ class MarchingLinesDetectorTest {
 
     @ParameterizedTest(name = "Lines: {1}")
     @MethodSource("detectLinesOnTwoRanksSingleSquareArgs")
-    void shouldDetectLinesOnSingleSquare(List<MarchingRow> marchingRows, Set<MarchingLine> expectedLines) {
+    void shouldDetectLinesOnTwoRanksSingleSquare(List<MarchingRow> marchingRows, Set<MarchingLine> expectedLines) {
 
         Set<MarchingLine> lines = uut.detectLines(marchingRows);
 
         assertThat(lines)
-                .withFailMessage("Lines %s detected does not match expected lines %s.", lines, expectedLines)
+                .withFailMessage("Lines %s does not match expected lines %s.", lines, expectedLines)
                 .isEqualTo(expectedLines);
     }
 
-    public static Stream<Arguments> detectLinesOnTwoRanksSingleSquareArgs() {
+    @Test
+    void shouldSetXOffsetProperly() {
+        List<MarchingRow> marchingRows = List.of(
+                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0), createMarchingSquare(1))),
+                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0), createMarchingSquare(0)))
+        );
+
+        Set<MarchingLine> lines = uut.detectLines(marchingRows);
+
+        assertThat(lines).isEqualTo(Set.of(
+                new MarchingLine(new Point(2, 0.5), new Point(2.5, 1)),
+                new MarchingLine(new Point(2, 0.5), new Point(2, 0)),
+                new MarchingLine(new Point(3, 1), new Point(2.5, 1))
+        ));
+    }
+
+    @Test
+    void shouldSetYOffsetProperly() {
+        List<MarchingRow> marchingRows = List.of(
+                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0))),
+                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0))),
+                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1)))
+        );
+
+        Set<MarchingLine> lines = uut.detectLines(marchingRows);
+
+        assertThat(lines).isEqualTo(Set.of(
+                new MarchingLine(new Point(1, 2.5), new Point(1, 3)),
+                new MarchingLine(new Point(1, 2.5), new Point(1.5, 2)),
+                new MarchingLine(new Point(1.5, 2), new Point(2, 2))
+        ));
+    }
+
+    @ParameterizedTest(name = "Lines: {1}")
+    @MethodSource("detectLinesOnTwoRanksMultipleSquareArgs")
+    void shouldDetectLinesOnTwoRanksMultipleSquares(List<MarchingRow> marchingRows, Set<MarchingLine> expectedLines) {
+
+        Set<MarchingLine> lines = uut.detectLines(marchingRows);
+
+        assertThat(lines)
+                .withFailMessage("Lines %s does not match expected lines %s.", lines, expectedLines)
+                .isEqualTo(expectedLines);
+    }
+
+    static Stream<Arguments> detectLinesOnTwoRanksSingleSquareArgs() {
         MarchingLine rightLine = new MarchingLine(new Point(1.5, 1), new Point(2, 1));
         MarchingLine leftLine = new MarchingLine(new Point(0, 1), new Point(0.5, 1));
         MarchingLine bottomLine = new MarchingLine(new Point(1, 1.5), new Point(1, 2));
@@ -177,34 +222,93 @@ class MarchingLinesDetectorTest {
         );
     }
 
+
+    static Stream<Arguments> detectLinesOnTwoRanksMultipleSquareArgs() {
+        return Stream.of(
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1), createMarchingSquare(0)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(1, 0), new Point(1, 0.5)),
+                                new MarchingLine(new Point(1, 0.5), new Point(1.5, 1)),
+                                new MarchingLine(new Point(1.5, 1), new Point(2, 0.5)),
+                                new MarchingLine(new Point(2, 0.5), new Point(2, 0)),
+
+                                new MarchingLine(new Point(1, 3), new Point(1, 2.5)),
+                                new MarchingLine(new Point(1, 2.5), new Point(1.5, 2)),
+                                new MarchingLine(new Point(1.5, 2), new Point(2, 2.5)),
+                                new MarchingLine(new Point(2, 2.5), new Point(2, 3))
+                        )
+                ),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1), createMarchingSquare(0)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(0, 1), new Point(0.5, 1)),
+                                new MarchingLine(new Point(0.5, 1), new Point(1.5, 1)),
+                                new MarchingLine(new Point(1.5, 1), new Point(2, 0.5)),
+                                new MarchingLine(new Point(2, 0.5), new Point(2, 0)),
+
+                                new MarchingLine(new Point(0, 2), new Point(0.5, 2)),
+                                new MarchingLine(new Point(0.5, 2), new Point(1.5, 2)),
+                                new MarchingLine(new Point(1.5, 2), new Point(2, 2.5)),
+                                new MarchingLine(new Point(2, 2.5), new Point(2, 3))
+                        )
+                ),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1), createMarchingSquare(1))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(0), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(1), createMarchingSquare(1)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(0, 1), new Point(0.5, 1)),
+                                new MarchingLine(new Point(0.5, 1), new Point(1.5, 1)),
+                                new MarchingLine(new Point(1.5, 1), new Point(2.5, 1)),
+                                new MarchingLine(new Point(2.5, 1), new Point(3, 1)),
+
+                                new MarchingLine(new Point(0, 2), new Point(0.5, 2)),
+                                new MarchingLine(new Point(0.5, 2), new Point(1.5, 2)),
+                                new MarchingLine(new Point(1.5, 2), new Point(2.5, 2)),
+                                new MarchingLine(new Point(2.5, 2), new Point(3, 2))
+                        )
+                ),
+                Arguments.of(List.of(
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0), createMarchingSquare(1))),
+                                new MarchingRow(List.of(createMarchingSquare(0), createMarchingSquare(1), createMarchingSquare(0))),
+                                new MarchingRow(List.of(createMarchingSquare(1), createMarchingSquare(0), createMarchingSquare(1)))
+                        ),
+                        Set.of(
+                                new MarchingLine(new Point(0, 1), new Point(0.5, 1)),
+                                new MarchingLine(new Point(0.5, 1), new Point(1, 0.5)),
+                                new MarchingLine(new Point(1, 0.5), new Point(1, 0)),
+
+                                new MarchingLine(new Point(2, 0), new Point(2, 0.5)),
+                                new MarchingLine(new Point(2, 0.5), new Point(2.5, 1)),
+                                new MarchingLine(new Point(2.5, 1), new Point(3, 1)),
+
+                                new MarchingLine(new Point(0, 2), new Point(0.5, 2)),
+                                new MarchingLine(new Point(0.5, 2), new Point(1, 2.5)),
+                                new MarchingLine(new Point(1, 2.5), new Point(1, 3)),
+
+                                new MarchingLine(new Point(2, 3), new Point(2, 2.5)),
+                                new MarchingLine(new Point(2, 2.5), new Point(2.5, 2)),
+                                new MarchingLine(new Point(2.5, 2), new Point(3, 2)),
+
+                                new MarchingLine(new Point(1, 1.5), new Point(1.5, 1)),
+                                new MarchingLine(new Point(1.5, 1), new Point(2, 1.5)),
+                                new MarchingLine(new Point(2, 1.5), new Point(1.5, 2)),
+                                new MarchingLine(new Point(1.5, 2), new Point(1, 1.5))
+                        )
+                )
+        );
+    }
+
+
     private static MarchingSquare createMarchingSquare(int rank) {
         return MarchingSquare.builder().rank(rank).build();
     }
-    /*
-
-    void shouldSetOffsetProperly() {
-    0 1 0
-    0 0 0
-
-
-    void shouldDetectLinesOnSquaresWithMultipleRows() {
-    0 1 0
-    0 0 0
-    0 1 0
-
-    1 1 0
-    0 0 0
-    1 1 0
-
-    1 1 1
-    0 0 0
-    1 1 1
-
-    1 0 1
-    0 1 0
-    1 0 1
-
-    }*/
-
-
 }
