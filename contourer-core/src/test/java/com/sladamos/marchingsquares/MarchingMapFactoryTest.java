@@ -5,6 +5,7 @@ import com.sladamos.data.ContourerHeights;
 import com.sladamos.data.ContourerRow;
 import com.sladamos.rank.RankCalculator;
 import com.sladamos.rank.RankCalculatorData;
+import com.sladamos.util.Point;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,10 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,18 +31,23 @@ class MarchingMapFactoryTest {
     @Mock
     private RankCalculator rankCalculator;
 
+    @Mock
+    private MarchingLinesDetector linesDetector;
+
     @InjectMocks
     private MarchingMapFactory uut;
 
     @ParameterizedTest(name = "Ranks: {0}")
     @MethodSource("shouldCreateCorrectMarchingMapCases")
-    void shouldCreateCorrectMarchingMap(int numberOfRanks, List<Integer> expectedRanks) {
+    void shouldCreateCorrectMarchingMap(int numberOfRanks, List<Integer> expectedRanks, Set<MarchingLine> expectedLines) {
         ContourerData data = ContourerData.builder()
                 .heights(createContourerHeights())
                 .minValue(BigDecimal.valueOf(100))
                 .maxValue(BigDecimal.valueOf(200))
                 .build();
         mockRankCalculator(data, expectedRanks, numberOfRanks);
+
+        when(linesDetector.detectLines(any())).thenReturn(expectedLines);
 
         MarchingMap marchingMap = uut.createMap(data, numberOfRanks);
 
@@ -48,15 +57,18 @@ class MarchingMapFactoryTest {
                 .map(MarchingSquare::getRank)
                 .toList();
 
-        assertThat(actualRanks)
-                .withFailMessage("Ranks in the generated marching map do not match the expected ranks.")
-                .isEqualTo(expectedRanks);
+        assertAll("Marching map do not match expected map.",
+                () -> assertThat(actualRanks).isEqualTo(expectedRanks),
+                () -> assertThat(marchingMap.lines()).isEqualTo(expectedLines)
+        );
+
+
     }
 
     private static Stream<Arguments> shouldCreateCorrectMarchingMapCases() {
         return Stream.of(
-                org.junit.jupiter.params.provider.Arguments.of(1, List.of(0, 0, 0, 0, 0, 0)),
-                org.junit.jupiter.params.provider.Arguments.of(2, List.of(0, 0, 1, 0, 1, 1))
+                Arguments.of(1, List.of(0, 0, 0, 0, 0, 0), Set.of()),
+                Arguments.of(2, List.of(0, 0, 1, 0, 1, 1), Set.of(new MarchingLine(new Point(0, 1), new Point(3, 1))))
         );
     }
 

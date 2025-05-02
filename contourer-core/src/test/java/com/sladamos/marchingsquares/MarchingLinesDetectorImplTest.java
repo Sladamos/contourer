@@ -12,9 +12,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MarchingLinesDetectorTest {
+class MarchingLinesDetectorImplTest {
 
-    private final MarchingLinesDetector uut = new MarchingLinesDetector();
+    private final MarchingLinesDetector uut = new MarchingLinesDetectorImpl();
 
     @ParameterizedTest(name = "Lines: {1}")
     @MethodSource("detectLinesOnTwoRanksSingleSquareArgs")

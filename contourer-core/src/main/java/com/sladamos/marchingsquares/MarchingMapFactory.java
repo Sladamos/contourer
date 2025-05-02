@@ -7,12 +7,15 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class MarchingMapFactory {
 
     private final RankCalculator rankCalculator;
+
+    private final MarchingLinesDetector linesDetector;
 
     public MarchingMap createMap(ContourerData data, int numberOfRanks) {
         Function<BigDecimal, RankCalculatorData> calculatorDataFunction = createCalculatorDataFunction(data, numberOfRanks);
@@ -21,7 +24,8 @@ public class MarchingMapFactory {
                         .map(this.createSquare(calculatorDataFunction))
                         .toList()))
                 .toList();
-        return new MarchingMap(rows);
+        Set<MarchingLine> lines = linesDetector.detectLines(rows);
+        return new MarchingMap(rows, lines);
     }
 
     private Function<BigDecimal, MarchingSquare> createSquare(Function<BigDecimal, RankCalculatorData> calculatorDataFunction) {
