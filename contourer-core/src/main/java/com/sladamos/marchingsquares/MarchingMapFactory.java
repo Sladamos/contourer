@@ -19,8 +19,8 @@ public class MarchingMapFactory {
 
     public MarchingMap createMap(ContourerData data, int numberOfRanks) {
         Function<BigDecimal, RankCalculatorData> calculatorDataFunction = createCalculatorDataFunction(data, numberOfRanks);
-        List<MarchingRow> rows = data.getHeights().rows().stream()
-                .map(row -> new MarchingRow(row.heights().stream()
+        List<MarchingRow> rows = data.getHeights().rows().parallelStream()
+                .map(row -> new MarchingRow(row.heights().parallelStream()
                         .map(this.createSquare(calculatorDataFunction))
                         .toList()))
                 .toList();

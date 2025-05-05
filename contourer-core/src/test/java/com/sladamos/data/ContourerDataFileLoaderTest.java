@@ -16,7 +16,7 @@ class ContourerDataFileLoaderTest {
 
     @Test
     void shouldThrowContourerLoaderExceptionWhenFileExtensionIsNotTiff() {
-        FileInfo fileInfo = FileInfo.builder().fileExtension(FileExtension.EMPTY).build();
+        FileInfo fileInfo = FileInfo.builder().fileExtension(FileExtension.UNKNOWN).build();
 
         assertThatThrownBy(() -> uut.loadData(fileInfo)).isInstanceOf(ContourerLoaderException.class);
     }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            prefWidth="800" prefHeight="450">
+
+    <center>
+        <Pane fx:id="drawingPane"
+              style="-fx-background-color: white;"/>
+    </center>
+
+    <right>
+        <VBox prefWidth="150"
+              prefHeight="200"
+              spacing="10"
+              style="-fx-border-color: #ccc; -fx-background-color: #f0f0f0;">
+            <padding>
+                <Insets top="10" left="10" right="10" bottom="10"/>
+            </padding>
+
+            <Label text="Number of ranks:"/>
+            <TextField fx:id="numberOfRanks" promptText="Enter number > 0"/>
+            <Button text="Load File" onAction="#onLoadFileClicked"/>
+            <Button text="Execute Algorithm" onAction="#onExecuteClicked"/>
+            <Button text="Zoom In" onAction="#onZoomIn"/>
+            <Button text="Zoom Out" onAction="#onZoomOut"/>
+        </VBox>
+    </right>
+
+</BorderPane>
