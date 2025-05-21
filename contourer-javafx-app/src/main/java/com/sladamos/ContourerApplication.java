@@ -5,6 +5,7 @@ import com.sladamos.data.ContourerDataLoader;
 import com.sladamos.file.FileInfo;
 import com.sladamos.file.FileInfoProvider;
 import com.sladamos.file.JavaFXFileInfoProvider;
+import com.sladamos.gui.CameraImpl;
 import com.sladamos.marchingsquares.MarchingLinesDetector;
 import com.sladamos.marchingsquares.MarchingLinesDetectorImpl;
 import com.sladamos.marchingsquares.MarchingMapFactory;
@@ -34,10 +35,17 @@ public class ContourerApplication extends Application {
         MarchingLinesDetector marchingLinesDetector = new MarchingLinesDetectorImpl();
         MarchingMapFactory marchingMapFactory = new MarchingMapFactory(rankCalculator, marchingLinesDetector);
         ContourerDataLoader<FileInfo> contourerDataLoader = new ContourerDataFileLoader();
-        return new ContourerController(fileInfoProvider, marchingMapFactory, contourerDataLoader);
+        return new ContourerController(fileInfoProvider, marchingMapFactory, contourerDataLoader, CameraImpl::new);
     }
 
     public static void main(String[] args) {
         launch();
     }
 }
+
+//TODO:
+// 1. naprawić zoom i GUI
+// 2. rysowanie innych linii
+// 3. eksport pliku do qgis
+// 4. interpolacja linii
+// 5. załadowanie mapki pod spód

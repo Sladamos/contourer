@@ -4,14 +4,19 @@ import com.sladamos.data.ContourerData;
 import com.sladamos.data.ContourerDataLoader;
 import com.sladamos.file.FileInfo;
 import com.sladamos.file.FileInfoProvider;
+import com.sladamos.gui.Camera;
+import com.sladamos.gui.CameraData;
 import com.sladamos.marchingsquares.MarchingMap;
 import com.sladamos.marchingsquares.MarchingMapFactory;
+import com.sladamos.util.Point;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import lombok.RequiredArgsConstructor;
+
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class ContourerController {
@@ -28,17 +33,13 @@ public class ContourerController {
 
     private final ContourerDataLoader<FileInfo> contourerDataLoader;
 
+    private final Function<CameraData, Camera> cameraFactory;
+
     private ContourerData contourerData;
-
     private MarchingMap map;
-
-    private int currentViewportSize = 1000;
-
-    private double offsetX = 0;
-    private double offsetY = 0;
-
     private double dragStartX = 0;
     private double dragStartY = 0;
+    private Camera camera;
 
     @FXML
     public void initialize() {
@@ -53,18 +54,27 @@ public class ContourerController {
         drawingPane.setOnMouseDragged(event -> {
             double dx = event.getX() - dragStartX;
             double dy = event.getY() - dragStartY;
-            offsetX += dx;
-            offsetY += dy;
-            dragStartX = event.getX();
-            dragStartY = event.getY();
-            drawMap();
+            if (camera != null) {
+                camera.move(new Point(dx, dy));
+                dragStartX = event.getX();
+                dragStartY = event.getY();
+                drawMap();
+            }
         });
     }
 
     public void onLoadFileClicked(ActionEvent actionEvent) {
-        FileInfo fileInfo = fileInfoProvider.getFileInfo();
-        if (fileInfo != null) {
-            contourerData = contourerDataLoader.loadData(fileInfo);
+        try {
+            FileInfo fileInfo = fileInfoProvider.getFileInfo();
+            if (fileInfo != null) {
+                contourerData = contourerDataLoader.loadData(fileInfo);
+                CameraData cameraData = new CameraData(drawingPane.getWidth(), drawingPane.getHeight(), contourerData.getNumberOfRows(), contourerData.getNumberOfColumns());
+                camera = cameraFactory.apply(cameraData);
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (Exception e) {
+            showAlert("Error loading contourer data");
         }
     }
 
@@ -72,24 +82,18 @@ public class ContourerController {
         if (isValidNumberOfRanks() && contourerData != null) {
             int ranks = Integer.parseInt(numberOfRanks.getText());
             this.map = marchingMapFactory.createMap(contourerData, ranks);
-
-
-            this.currentViewportSize = 1000;
-            this.offsetX = 0;
-            this.offsetY = 0;
+            camera.reset();
             drawMap();
         }
     }
 
     public void onZoomIn() {
-        if (currentViewportSize > 1) {
-            currentViewportSize /= 2;
-            drawMap();
-        }
+        camera.zoomIn();
+        drawMap();
     }
 
     public void onZoomOut() {
-        currentViewportSize *= 2;
+        camera.zoomOut();
         drawMap();
     }
 
@@ -122,11 +126,9 @@ public class ContourerController {
         double paneWidth = drawingPane.getWidth();
         double paneHeight = drawingPane.getHeight();
 
-        double squareWidth = paneWidth / currentViewportSize;
-        double squareHeight = paneHeight / currentViewportSize;
-        double squareSize = Math.min(squareWidth, squareHeight);
-        double maxY = currentViewportSize * squareSize;
-        double maxX = currentViewportSize * squareSize;
+        double squareSize = camera.getSquareSize();
+        double offsetX = camera.getOffset().x();
+        double offsetY = camera.getOffset().y();
 
         for (var line : map.lines()) {
             double x1 = line.first().x() * squareSize + offsetX;
@@ -134,13 +136,16 @@ public class ContourerController {
             double x2 = line.second().x() * squareSize + offsetX;
             double y2 = line.second().y() * squareSize + offsetY;
 
-            if (x1 <= maxX && y1 <= maxY && x2 <= maxX && y2 <= maxY) {
-
-                javafx.scene.shape.Line fxLine = new javafx.scene.shape.Line(x1, y1, x2, y2);
-                fxLine.setStrokeWidth(2.0);
-                fxLine.setStyle("-fx-stroke: red;");
-                drawingPane.getChildren().add(fxLine);
+            if (x1 <= paneWidth && y1 <= paneHeight && x2 <= paneWidth && y2 <= paneHeight) {
+                drawLine(x1, y1, x2, y2);
             }
         }
+    }
+
+    private void drawLine(double x1, double y1, double x2, double y2) {
+        javafx.scene.shape.Line fxLine = new javafx.scene.shape.Line(x1, y1, x2, y2);
+        fxLine.setStrokeWidth(2.0);
+        fxLine.setStyle("-fx-stroke: red;");
+        drawingPane.getChildren().add(fxLine);
     }
 }
