@@ -1,9 +1,14 @@
 package com.sladamos.rank;
 
+import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@RequiredArgsConstructor
 public class MultipleRanksCalculator implements RankCalculator {
+
+    private final StepCalculator stepCalculator;
 
     @Override
     public int calculateRank(RankCalculatorData rankCalculatorData) {
@@ -12,8 +17,7 @@ public class MultipleRanksCalculator implements RankCalculator {
         int numberOfRanks = rankCalculatorData.numberOfRanks();
         BigDecimal maxValue = rankCalculatorData.maxValue();
 
-        BigDecimal step = maxValue.subtract(minValue)
-                .divide(BigDecimal.valueOf(numberOfRanks), RoundingMode.HALF_UP);
+        BigDecimal step = stepCalculator.calculateStep(maxValue, minValue, numberOfRanks);
 
         int rawRank = height.subtract(minValue)
                 .divide(step, RoundingMode.DOWN)
@@ -23,4 +27,5 @@ public class MultipleRanksCalculator implements RankCalculator {
 
         return Math.min(rawRank, maxRank);
     }
+
 }

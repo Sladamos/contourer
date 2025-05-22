@@ -9,8 +9,9 @@ import com.sladamos.gui.CameraImpl;
 import com.sladamos.marchingsquares.MarchingLinesDetector;
 import com.sladamos.marchingsquares.MarchingLinesDetectorImpl;
 import com.sladamos.marchingsquares.MarchingMapFactory;
-import com.sladamos.rank.MultipleRanksCalculator;
+import com.sladamos.rank.DualRanksCalculator;
 import com.sladamos.rank.RankCalculator;
+import com.sladamos.rank.StepCalculator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,9 +32,10 @@ public class ContourerApplication extends Application {
 
     private static ContourerController createController(Stage stage) {
         FileInfoProvider fileInfoProvider = new JavaFXFileInfoProvider(stage);
-        RankCalculator rankCalculator = new MultipleRanksCalculator();
+        RankCalculator rankCalculator = new DualRanksCalculator();
         MarchingLinesDetector marchingLinesDetector = new MarchingLinesDetectorImpl();
-        MarchingMapFactory marchingMapFactory = new MarchingMapFactory(rankCalculator, marchingLinesDetector);
+        StepCalculator stepCalculator = new StepCalculator();
+        MarchingMapFactory marchingMapFactory = new MarchingMapFactory(rankCalculator, stepCalculator, marchingLinesDetector);
         ContourerDataLoader<FileInfo> contourerDataLoader = new ContourerDataFileLoader();
         return new ContourerController(fileInfoProvider, marchingMapFactory, contourerDataLoader, CameraImpl::new);
     }
@@ -45,9 +47,5 @@ public class ContourerApplication extends Application {
 
 //TODO:
 // załadowanie mapki pod spód
-// rysowanie innych linii
-//      zmienic kalkulator na dualRank
-//      przygotować kilka map
-//      złączyć sety w jeden i wyświetlić z obecnym mapem
 // eksport pliku do qgis
 // interpolacja linii - tutaj zrobić dodawanie na krawędziach

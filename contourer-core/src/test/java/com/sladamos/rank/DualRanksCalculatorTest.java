@@ -15,11 +15,10 @@ class DualRanksCalculatorTest {
 
     @ParameterizedTest(name = "Height: {0}, Expected Rank: {4}")
     @MethodSource("rankCases")
-    void shouldCorrectlyCalculateRank(BigDecimal height, BigDecimal minValue, BigDecimal maxValue, int expectedRank) {
+    void shouldCorrectlyCalculateRank(BigDecimal height, BigDecimal threshold, int expectedRank) {
         RankCalculatorData data = RankCalculatorData.builder()
                 .height(height)
-                .maxValue(maxValue)
-                .minValue(minValue)
+                .threshold(threshold)
                 .build();
 
         int rank = uut.calculateRank(data);
@@ -31,10 +30,10 @@ class DualRanksCalculatorTest {
 
     private static Stream<Arguments> rankCases() {
         return Stream.of(
-                Arguments.of(new BigDecimal("100"), new BigDecimal("100"), new BigDecimal("200"), 0),
-                Arguments.of(new BigDecimal("200"), new BigDecimal("100"), new BigDecimal("200"), 1),
-                Arguments.of(new BigDecimal("150"), new BigDecimal("100"), new BigDecimal("200"), 1),
-                Arguments.of(new BigDecimal("149"), new BigDecimal("100"), new BigDecimal("200"), 0)
+                Arguments.of(new BigDecimal("100"), new BigDecimal("150"), 0),
+                Arguments.of(new BigDecimal("200"), new BigDecimal("150"), 1),
+                Arguments.of(new BigDecimal("150"), new BigDecimal("150"), 1),
+                Arguments.of(new BigDecimal("149"), new BigDecimal("150"), 0)
         );
     }
 
