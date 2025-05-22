@@ -3,7 +3,7 @@ package com.sladamos.rank;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class RankCalculatorImpl implements RankCalculator {
+public class MultipleRanksCalculator implements RankCalculator {
 
     @Override
     public int calculateRank(RankCalculatorData rankCalculatorData) {

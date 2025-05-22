@@ -9,8 +9,8 @@ import com.sladamos.gui.CameraImpl;
 import com.sladamos.marchingsquares.MarchingLinesDetector;
 import com.sladamos.marchingsquares.MarchingLinesDetectorImpl;
 import com.sladamos.marchingsquares.MarchingMapFactory;
+import com.sladamos.rank.MultipleRanksCalculator;
 import com.sladamos.rank.RankCalculator;
-import com.sladamos.rank.RankCalculatorImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,7 +31,7 @@ public class ContourerApplication extends Application {
 
     private static ContourerController createController(Stage stage) {
         FileInfoProvider fileInfoProvider = new JavaFXFileInfoProvider(stage);
-        RankCalculator rankCalculator = new RankCalculatorImpl();
+        RankCalculator rankCalculator = new MultipleRanksCalculator();
         MarchingLinesDetector marchingLinesDetector = new MarchingLinesDetectorImpl();
         MarchingMapFactory marchingMapFactory = new MarchingMapFactory(rankCalculator, marchingLinesDetector);
         ContourerDataLoader<FileInfo> contourerDataLoader = new ContourerDataFileLoader();
@@ -44,8 +44,10 @@ public class ContourerApplication extends Application {
 }
 
 //TODO:
-// 1. naprawić zoom i GUI
-// 2. rysowanie innych linii
-// 3. eksport pliku do qgis
-// 4. interpolacja linii
-// 5. załadowanie mapki pod spód
+// załadowanie mapki pod spód
+// rysowanie innych linii
+//      zmienic kalkulator na dualRank
+//      przygotować kilka map
+//      złączyć sety w jeden i wyświetlić z obecnym mapem
+// eksport pliku do qgis
+// interpolacja linii - tutaj zrobić dodawanie na krawędziach

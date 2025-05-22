@@ -1,7 +1,8 @@
 package com.sladamos.marchingsquares;
 
 import java.util.List;
+import java.util.Set;
 
-public record MarchingMap(List<MarchingRow> rows, java.util.Set<MarchingLine> lines) {
+public record MarchingMap(List<MarchingRow> rows, Set<MarchingLine> lines) {
 
 }

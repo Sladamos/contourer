@@ -54,13 +54,17 @@ public class ContourerController {
         drawingPane.setOnMouseDragged(event -> {
             double dx = event.getX() - dragStartX;
             double dy = event.getY() - dragStartY;
-            if (camera != null) {
-                camera.move(new Point(dx, dy));
-                dragStartX = event.getX();
-                dragStartY = event.getY();
-                drawMap();
-            }
+            updateMapIfNecessary(dx, dy);
+            dragStartX = event.getX();
+            dragStartY = event.getY();
         });
+    }
+
+    private void updateMapIfNecessary(double dx, double dy) {
+        if (camera != null) {
+            camera.move(new Point(dx, dy));
+            drawMap();
+        }
     }
 
     public void onLoadFileClicked(ActionEvent actionEvent) {

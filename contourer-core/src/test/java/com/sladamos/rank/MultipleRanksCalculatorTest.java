@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RankCalculatorImplTest {
+class MultipleRanksCalculatorTest {
 
-    private final RankCalculator uut = new RankCalculatorImpl();
+    private final RankCalculator uut = new MultipleRanksCalculator();
 
     @ParameterizedTest(name = "Height: {0}, Expected Rank: {4}")
     @MethodSource("rankCases")
@@ -30,7 +30,11 @@ class RankCalculatorImplTest {
                 Arguments.of(new BigDecimal("100"), new BigDecimal("100"), new BigDecimal("200"), 2, 0),
                 Arguments.of(new BigDecimal("200"), new BigDecimal("100"), new BigDecimal("200"), 2, 1),
                 Arguments.of(new BigDecimal("150"), new BigDecimal("100"), new BigDecimal("200"), 2, 1),
-                Arguments.of(new BigDecimal("149"), new BigDecimal("100"), new BigDecimal("200"), 2, 0)
+                Arguments.of(new BigDecimal("149"), new BigDecimal("100"), new BigDecimal("200"), 2, 0),
+                Arguments.of(new BigDecimal("199"), new BigDecimal("100"), new BigDecimal("400"), 3, 0),
+                Arguments.of(new BigDecimal("200"), new BigDecimal("100"), new BigDecimal("400"), 3, 1),
+                Arguments.of(new BigDecimal("299"), new BigDecimal("100"), new BigDecimal("400"), 3, 1),
+                Arguments.of(new BigDecimal("300"), new BigDecimal("100"), new BigDecimal("400"), 3, 2)
         );
     }
 

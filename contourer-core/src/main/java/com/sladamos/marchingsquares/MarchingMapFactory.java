@@ -18,7 +18,7 @@ public class MarchingMapFactory {
     private final MarchingLinesDetector linesDetector;
 
     public MarchingMap createMap(ContourerData data, int numberOfRanks) {
-        Function<BigDecimal, RankCalculatorData> calculatorDataFunction = createCalculatorDataFunction(data, numberOfRanks);
+        Function<BigDecimal, RankCalculatorData> calculatorDataFunction = createCalculatorDataFunction(data);
         List<MarchingRow> rows = data.getHeights().rows().parallelStream()
                 .map(row -> new MarchingRow(row.heights().parallelStream()
                         .map(this.createSquare(calculatorDataFunction))
@@ -36,9 +36,13 @@ public class MarchingMapFactory {
         };
     }
 
-    private Function<BigDecimal, RankCalculatorData> createCalculatorDataFunction(ContourerData data, int numberOfRanks) {
+    private Function<BigDecimal, RankCalculatorData> createCalculatorDataFunction(ContourerData data) {
         BigDecimal minValue = data.getMinValue();
         BigDecimal maxValue = data.getMaxValue();
-        return height -> new RankCalculatorData(height, maxValue, minValue, numberOfRanks);
+        return height -> RankCalculatorData.builder()
+                .height(height)
+                .minValue(minValue)
+                .maxValue(maxValue)
+                .build();
     }
 }
