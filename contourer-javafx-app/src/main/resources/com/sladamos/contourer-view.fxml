@@ -25,6 +25,7 @@
             <Label text="Number of ranks:"/>
             <TextField fx:id="numberOfRanks" promptText="Enter number > 0"/>
             <Button text="Load File" onAction="#onLoadFileClicked"/>
+            <Button text="Load Image" onAction="#onLoadImageClicked"/>
             <Button text="Execute Algorithm" onAction="#onExecuteClicked"/>
             <Button text="Zoom In" onAction="#onZoomIn"/>
             <Button text="Zoom Out" onAction="#onZoomOut"/>

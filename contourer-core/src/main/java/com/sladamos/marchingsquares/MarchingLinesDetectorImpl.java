@@ -19,6 +19,7 @@ public class MarchingLinesDetectorImpl implements MarchingLinesDetector {
                 MarchingSquare rightUpper = marchingRows.get(i).getSquare(j + 1);
                 MarchingSquare leftLower = marchingRows.get(i + 1).getSquare(j);
                 MarchingSquare rightLower = marchingRows.get(i + 1).getSquare(j + 1);
+
                 if (areAllRanksEqual(leftUpper, rightUpper, leftLower, rightLower)) {
                     continue;
                 } else if (isLeftUpperRankDifferent(leftUpper, rightUpper, leftLower, rightLower)) {
