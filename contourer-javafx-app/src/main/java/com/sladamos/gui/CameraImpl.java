@@ -9,20 +9,20 @@ import lombok.RequiredArgsConstructor;
 public class CameraImpl implements Camera {
 
     private final CameraData cameraData;
-    private int viewportSize;
+    private double viewportSize;
     private Point offset;
     private double squareSize;
 
     @Override
     public void zoomIn() {
         if (viewportSize > 1) {
-            updateZoom(viewportSize / 2);
+            updateZoom(viewportSize / 1.5);
         }
     }
 
     @Override
     public void zoomOut() {
-        updateZoom(viewportSize * 2);
+        updateZoom(viewportSize * 1.5);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CameraImpl implements Camera {
         offset = new Point((cameraData.screenWidth() - mapWidth) / 2, (cameraData.screenHeight() - mapHeight) / 2);
     }
 
-    private void updateZoom(int newViewportSize) {
+    private void updateZoom(double newViewportSize) {
         double centerX = cameraData.screenWidth() / 2;
         double centerY = cameraData.screenHeight() / 2;
         double oldSquare = squareSize;

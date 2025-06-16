@@ -17,13 +17,13 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -57,11 +57,7 @@ class MarchingMapFactoryTest {
 
         MarchingMap marchingMap = uut.createMap(data, numberOfRanks);
 
-        assertAll("Marching map do not match expected map.",
-                () -> assertThat(marchingMap.lines()).isEqualTo(expectedLines)
-        );
-
-
+        assertThat(marchingMap.lines()).isEqualTo(expectedLines);
     }
 
     private static Stream<Arguments> shouldCreateCorrectMarchingMapCases() {
@@ -84,7 +80,7 @@ class MarchingMapFactoryTest {
                 .forEach(i -> when(rankCalculator.calculateRank(
                         RankCalculatorData.builder()
                                 .height(heights.get(i))
-                                .threshold(data.getMaxValue().add(data.getMinValue()).divide(BigDecimal.valueOf(MarchingMapFactory.MINIMAL_NUMBER_OF_RANKS)))
+                                .threshold(data.getMaxValue().add(data.getMinValue()).divide(BigDecimal.valueOf(MarchingMapFactory.MINIMAL_NUMBER_OF_RANKS), RoundingMode.UNNECESSARY))
                                 .build()))
                         .thenReturn(expectedRanks.get(i)));
     }

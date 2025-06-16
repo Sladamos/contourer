@@ -44,18 +44,18 @@ class ContourerDataFileLoaderTest {
         ContourerData contourerData = uut.loadData(fileInfo);
 
         assertAll("Should correctly parse data",
-                () -> assertThat(contourerData.getNumberOfColumns()).isEqualTo(2209),
-                () -> assertThat(contourerData.getNumberOfRows()).isEqualTo(2064),
+                () -> assertThat(contourerData.getNumberOfColumns()).isEqualTo(2),
+                () -> assertThat(contourerData.getNumberOfRows()).isEqualTo(6),
                 () -> assertThat(contourerData.getXllCorner()).isEqualTo("253719.317869942635"),
                 () -> assertThat(contourerData.getYllCorner()).isEqualTo("331136.677727281640"),
                 () -> assertThat(contourerData.getDx()).isEqualTo("0.500062330590"),
                 () -> assertThat(contourerData.getDy()).isEqualTo("0.499940408994"),
-                () -> assertThat(contourerData.getMinValue()).isEqualTo("921.4000244140625"),
-                () -> assertThat(contourerData.getMaxValue()).isEqualTo("1314.5899658203125"),
-                () -> assertThat(contourerData.getHeights().getRow(0).getHeight(0)).isEqualTo("1031.969970703125"),
-                () -> assertThat(contourerData.getHeights().getRow(0).getHeight(2208)).isEqualTo("936.15997314453125"),
-                () -> assertThat(contourerData.getHeights().getRow(2063).getHeight(0)).isEqualTo("1205.9300537109375"),
-                () -> assertThat(contourerData.getHeights().getRow(2063).getHeight(2208)).isEqualTo("1171")
+                () -> assertThat(contourerData.getMinValue()).isEqualTo("1"),
+                () -> assertThat(contourerData.getMaxValue()).isEqualTo("6.6"),
+                () -> assertThat(contourerData.getHeights().getRow(0).getHeight(0)).isEqualTo("1"),
+                () -> assertThat(contourerData.getHeights().getRow(0).getHeight(1)).isEqualTo("1.1"),
+                () -> assertThat(contourerData.getHeights().getRow(5).getHeight(0)).isEqualTo("6"),
+                () -> assertThat(contourerData.getHeights().getRow(5).getHeight(1)).isEqualTo("6.6")
         );
     }
 
